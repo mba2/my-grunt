@@ -4,7 +4,7 @@ module.exports = function (grunt) {
 		// FOLDERS PATHS, STORED IN VARIABLES
 		dir: {
 			source		: "src",
-			dev	    	: "dev-test",
+			dev	    	: "dev",
 			deploy		: "deploy",
 			public 		: "public", 
 			resources	: "resources", 
@@ -18,9 +18,10 @@ module.exports = function (grunt) {
 		//CLEAN PROCESS
 		clean: {
 			target 				: { "src" : "<%= dir.currTask %>/" },
-			public_PHP_HTML 	: { "src" : "<%= dir.dev %>/<%= dir.public %>/*.{php,html}"},
 			backEnd 			: { "src" : "<%= dir.dev %>/*(<%= dir.resources %>|<%= dir.tests %>)"},	
+			public_PHP_HTML 	: { "src" : "<%= dir.dev %>/<%= dir.public %>/*.{php,html}"},
 			sass 				: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/**/*.css"},	
+			js 					: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.js %>/**/*.js"},	
 		},
 		//COPY PROCESS
 		copy: {
@@ -129,7 +130,17 @@ module.exports = function (grunt) {
 
 		//JS PROCESS
 		uglify : {
+			dev : {
+				// options : {
 
+				// },
+				files : [{
+					expand 	: true,
+					cwd	   	: "<%= dir.source %>/<%= dir.public %>/<%= dir.js %>",
+					src	   	: "**/*.js",
+					dest	: "<%= dir.dev %>/<%= dir.public %>/<%= dir.js %>",
+				}]
+			}
 		},
 
 		// WATCH PROCESS
@@ -161,6 +172,14 @@ module.exports = function (grunt) {
 			  }
 			},
 
+			js : {
+				files 	: ["<%= dir.source %>/<%= dir.public %>/**/*.js"],
+				tasks 	: ["uglify:dev"],
+				options	: {
+					event : ['added','changed']
+				}
+			},
+
 
 			// WATCH - DELETE PROCESS
 			deleted_backEnd : {
@@ -188,10 +207,22 @@ module.exports = function (grunt) {
 					"sass:dev"
 				],
 				options : {event : ["deleted"]}
+			},
 
-			}
+			deleted_javascript : {
+				files 	: ["<%= dir.source %>/<%= dir.public %>/**/*.js"],
+				tasks 	: [
+					"clean:js",
+					"uglify:dev",
+				],
+				options	: {
+					event : ['deleted']
+				}
+			},
 		}
 	});
+
+
 	// LOAD TASKS
 	grunt.loadNpmTasks("grunt-contrib-clean");
 	grunt.loadNpmTasks("grunt-contrib-copy");
@@ -206,7 +237,7 @@ module.exports = function (grunt) {
 		"copy",
 		// "responsive_images",
 		"sass:dev",
-		"uglify:dev",
+		"uglify",
 		"watch"
 	]);
 

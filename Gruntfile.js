@@ -1,5 +1,9 @@
 module.exports = function (grunt) {
 
+	// THIS VARIABLE DEFINES IF YOUR ASSETS WILL BE DEPLOYED AS MULTIPLE FILES OR IF THEY'RE GONNA BE DEPLOYED AS A SINGLE, UNIQUE ONE
+	// POSSIBLE VALUES: string "multiple_files" || "single_file"
+	var outputStructure = "multiple_files";
+	
 	grunt.initConfig({
 		// FOLDERS PATHS, STORED IN VARIABLES
 		dir: {
@@ -13,8 +17,10 @@ module.exports = function (grunt) {
 			js			: "js",
 			fonts		: "fonts",
 			images		: "img",
-			currTask	: grunt.cli.tasks[0] || "dev"
+			currTask	: grunt.cli.tasks[0] || "dewwwwv"
 		},
+
+
 		//CLEAN PROCESS
 		clean: {
 			target 				: { "src" : "<%= dir.currTask %>/" },
@@ -77,7 +83,7 @@ module.exports = function (grunt) {
 					flatten: true,
 					cwd: "<%= dir.source %>",
 					src: ["<%= dir.public %>/**/*.css"],
-					dest: "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>",
+					dest: "<%= dir.currTask %>/<%= dir.public %>/<%= dir.styles %>",
 				}]
 			},
 		},
@@ -242,12 +248,15 @@ module.exports = function (grunt) {
 	]);
 
 	grunt.registerTask("deploy",[
-	//   "clean:target",
+		"clean:target",
+		"copy:pureCSS",			 			// TRANSFER ALL CSS FILES. SOON, THEY'LL BE PROCESSED BY A 'POSTCSS' TASK'
+		"sass:deploy_" + outputStructure,	// SETS THE BEHAVIOR OF ASSETS OUTPUT (DEPLOYED AS MULTIPLE FILES OR AS A SINGLE FILE)
+		// "sass:deploy",
 	//   "copy",
 	//   "responsive_images",
 	//   "watch"
 	]);
 
-	grunt.registerTask("default", "dev");
+	// grunt.registerTask("default", "dev");
 
 };

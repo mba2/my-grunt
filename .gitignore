@@ -1,4 +1,5 @@
 build/
 dev/
+deploy/
 node_modules/
 .sass-cache/

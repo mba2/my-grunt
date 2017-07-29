@@ -76,7 +76,8 @@ module.exports = function (grunt) {
 					flatten: true,
 					cwd: "<%= dir.source %>",
 					src: ["<%= dir.public %>/**/*.css"],
-					dest: "<%= dir.currTask %>/<%= dir.public %>/<%= dir.styles %>",
+					dest: "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>",
+					ext: ".css"
 				}]
 			},
 			pureCSS_deploy: {
@@ -224,7 +225,7 @@ module.exports = function (grunt) {
 			
 			pureCSS: {
 			  files: ["<%= dir.source %>/public/**/*.css"],
-			  tasks: ["copy:pureCSS"],
+			  tasks: ["copy:pureCSS_dev"],
 			  options: {
 			    event: ["added", "changed"]
 			  }
@@ -261,8 +262,9 @@ module.exports = function (grunt) {
 			deleted_sass_and_css : {
 				files 	: ["<%= dir.source %>/<%= dir.public %>/<%= dir.styles %>/*.{scss,css}"],
 				tasks 	: [
-					"clean:sass",
-					"sass:dev"
+					"clean:styles",
+					"sass:dev",
+					"copy:pureCSS_dev"
 				],
 				options : {event : ["deleted"]}
 			},
@@ -284,7 +286,7 @@ module.exports = function (grunt) {
 			target 				: { "src" : "<%= dir.currTask %>/" },
 			backEnd 			: { "src" : "<%= dir.dev %>/*(<%= dir.resources %>|<%= dir.tests %>)"},	
 			public_PHP_HTML 	: { "src" : "<%= dir.dev %>/<%= dir.public %>/*.{php,html}"},
-			sass 				: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/**/*.css"},	
+			styles 				: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/**/*.css"},	
 			js 					: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.js %>/**/*.js"},			
 			temp_styles			: { "src" :	"<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>"}, // CLEAN ALL TEMPORARY CSS FILES ON 'DEPLOY MODE'
 		},		
@@ -306,10 +308,12 @@ module.exports = function (grunt) {
 
 	grunt.registerTask("dev", [
 		"clean:target",
-		"copy",
+		"copy:dev",
+		"copy:pureCSS_dev",
 		// "responsive_images",
 		"sass:dev",
-		"uglify",
+		// "postcss:dev",
+		// "uglify",
 		"watch"
 	]);
 

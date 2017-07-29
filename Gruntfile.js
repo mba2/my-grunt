@@ -2,7 +2,7 @@ module.exports = function (grunt) {
 
 	// THIS VARIABLE DEFINES IF YOUR ASSETS WILL BE DEPLOYED AS MULTIPLE FILES OR IF THEY'RE GONNA BE DEPLOYED AS A SINGLE, UNIQUE ONE
 	// POSSIBLE VALUES: string "multiple_files" || "single_file"
-	var outputStructure = "multiple_files";
+	var assets_mode = (grunt.option("assets_mode")) ? grunt.option("assets_mode") : "single_file";
 	
 	grunt.initConfig({
 		// FOLDERS PATHS, STORED IN VARIABLES
@@ -14,47 +14,40 @@ module.exports = function (grunt) {
 			resources	: "resources", 
 			tests		: "tests", 
 			styles		: "styles",
+			temp_styles	: "temp-styles",
 			js			: "js",
+			temp_js		: "temp-js",
 			fonts		: "fonts",
 			images		: "img",
-			currTask	: grunt.cli.tasks[0] || "dewwwwv"
+			currTask	: grunt.cli.tasks[0] || "dev"
 		},
 
 
-		//CLEAN PROCESS
-		clean: {
-			target 				: { "src" : "<%= dir.currTask %>/" },
-			backEnd 			: { "src" : "<%= dir.dev %>/*(<%= dir.resources %>|<%= dir.tests %>)"},	
-			public_PHP_HTML 	: { "src" : "<%= dir.dev %>/<%= dir.public %>/*.{php,html}"},
-			sass 				: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/**/*.css"},	
-			js 					: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.js %>/**/*.js"},	
-		},
 		//COPY PROCESS
 		copy: {
-			// THIS TARGET AIMS TO ALL PROJECT'S ASSETS
-			// "dev": {
-			// 	"files": [{
-			// 		"expand": true,
-			// 		"cwd": "<%= dir.source %>",
-			// 		"src": ["?(resources||tests)/**/*", 
-			// 				"public/*.{html,php}"	
-			// 			   ],
-			// 		// "src": ["?(public||resources||tests)/**/*", ],
-			// 		"dest": "<%= dir.dev %>"
-			// 	}]
-			// },
-			// THIS TARGET AIMS TO ALL PROJECT'S FILES AND FOLDERS PREPARING THE RESULT TO BE DEPLOYED
-			// "deploy" : {
-			//   "files" : [
-			//     {
-			//       "expand" : true,
-			//       "cwd": "<%= dir.source %>",
-			//       "src" : ["*(public||resources||tests)/**/*",
-			//               ],
-			//       "dest" : "<%= dir.deploy %>"
-			//     }
-			//   ]
-			// },
+			//THIS TARGET AIMS TO ALL PROJECT'S ASSETS
+			"dev": {
+				"files": [{
+					"expand": true,
+					"cwd": "<%= dir.source %>",
+					"src": ["?(resources||tests)/**/*", 
+							"public/*.{html,php}"	
+						   ],
+					"dest": "<%= dir.dev %>"
+				}]
+			},
+			//THIS TARGET AIMS TO ALL PROJECT'S FILES AND FOLDERS PREPARING THE RESULT TO BE DEPLOYED
+			"deploy" : {
+			  "files" : [
+			    {
+			      "expand" : true,
+			      "cwd": "<%= dir.source %>",
+			      "src" : ["*(public||resources||tests)/**/*",
+			              ],
+			      "dest" : "<%= dir.deploy %>"
+			    }
+			  ]
+			},
 
 			// THIS TARGET TRANSFERS ONLY ALTERED BACKEND ASSETS
 			backEnd: {
@@ -76,8 +69,8 @@ module.exports = function (grunt) {
 				}]
 			},
 
-			// // THIS TARGET TRANSFERS ONLY ALTERED FILES CONTAINING CSS
-			pureCSS: {
+			// THIS TARGET TRANSFERS PURE CSS IN 'DEV' MODE
+			pureCSS_dev: {
 				files: [{
 					expand: true,
 					flatten: true,
@@ -86,30 +79,41 @@ module.exports = function (grunt) {
 					dest: "<%= dir.currTask %>/<%= dir.public %>/<%= dir.styles %>",
 				}]
 			},
-		},
-		//RESPONSIVE IMAGES TASK
-		responsive_images: {
-			myTask: {
-				options: {
-					engine: "im",
-					sizes: [{
-						name: 'large',
-						width: 640
-					}, {
-						name: "large2",
-						width: 1024,
-						suffix: "_x2",
-						quality: 60
-					}]
-				},
+			pureCSS_deploy: {
 				files: [{
 					expand: true,
-					cwd: '<%= dir.dev %>/',
-					src: ['**/<%= dir.images %>/**.{jpg,gif,png}'],
-					dest: '<%= dir.dev %>/'
+					flatten: true,
+					cwd: "<%= dir.source %>",
+					src: ["<%= dir.public %>/**/*.css"],
+					dest: "<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>/",
 				}]
-			}
+			},
+			// THIS TARGET TRANSFERS PURE CSS IN 'DEV' MODE
 		},
+		
+		//RESPONSIVE IMAGES TASK
+			// myTask: {
+			// 	options: {
+			// 		engine: "im",
+			// 		sizes: [{
+			// 			name: 'large',
+			// 			width: 640
+			// 		}, {
+			// 			name: "large2",
+			// 			width: 1024,
+			// 			suffix: "_x2",
+			// 			quality: 60
+			// 		}]
+			// 	},
+			// 	files: [{
+			// 		expand: true,
+			// 		cwd: '<%= dir.dev %>/',
+			// 		src: ['**/<%= dir.images %>/**.{jpg,gif,png}'],
+			// 		dest: '<%= dir.dev %>/'
+			// 	}]
+			// }
+		// responsive_images: {
+		// },
 
 		//SASS PROCESS
 		sass : {
@@ -123,14 +127,59 @@ module.exports = function (grunt) {
 					expand 	: true,
 					cwd    	: "<%= dir.source %>/<%= dir.public %>/<%= dir.styles %>",
 					src	 	: "*.scss",
-					dest	: "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>"
+					dest	: "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>",
+					ext		: ".css"
 				}]
 			},
 			
-			deploy : {
+			deploy: {
 				options : {
-					style : "compressed"
-				}
+					// style 		: "compressed",
+					sourcemap	: "none",
+				},
+				files : [{
+					expand 	: true,
+					cwd    	: "<%= dir.source %>/<%= dir.public %>/<%= dir.styles %>",
+					src	 	: "*.scss",
+					dest	: "<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>",
+					ext 	: ".css"
+				}]
+			}
+		},
+
+		// CONCAT PROCESS.
+		// CURRENTLY THIS PROCESS WORKING ON SASS FILES WHEN THE DISERED BEHAVIOR IS TO BUNDLE ALL SASS FILES INTO AN UNIQUE CSS FILE. IT'S GONNA LOOK INTO A 'TEMP' FOLDER
+		// AND OUTPUT A UNIQUE CSS FILE 
+		concat :  {
+			options : {
+				sepator : ";",
+			},
+			css_single_file : {
+				src : "<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles%>/<%= dir.temp_styles %>/**/*.css",
+				dest: "<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles%>/<%= dir.temp_styles %>/app.css",
+			}
+		},
+
+		//POST PROCESS
+		postcss : {
+			options : {
+				// map : true,
+				processors : [
+					require('autoprefixer')({browsers: 'last 30 versions'}), // ADD VENDOR PREFIX FOR SOME CSS PROPS
+					require('cssnano')(), 									 // MINIFY THE SINGLE FILE 
+				]
+			},
+
+			dev: {
+				files : [{
+					src	: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>/app.css',
+					dest: 	'<%= dir.dev %>',
+				}]
+			},
+
+			deploy: {
+				src	: 	'<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>/app.css',
+				dest: 	'<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/app.min.css',
 			}
 		},
 
@@ -166,7 +215,10 @@ module.exports = function (grunt) {
 
 			sass : {
 				files 	: ["<%= dir.source %>/<%= dir.public %>/**/*.scss"],
-				tasks 	: ["sass:dev"],
+				tasks 	: [
+					"sass:dev",
+					"postcss:dev"
+				],
 				options	: {event: ["added","changed"]}
 			},
 			
@@ -225,7 +277,19 @@ module.exports = function (grunt) {
 					event : ['deleted']
 				}
 			},
-		}
+		},
+
+		//CLEAN PROCESS
+		clean: {
+			target 				: { "src" : "<%= dir.currTask %>/" },
+			backEnd 			: { "src" : "<%= dir.dev %>/*(<%= dir.resources %>|<%= dir.tests %>)"},	
+			public_PHP_HTML 	: { "src" : "<%= dir.dev %>/<%= dir.public %>/*.{php,html}"},
+			sass 				: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/**/*.css"},	
+			js 					: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.js %>/**/*.js"},			
+			temp_styles			: { "src" :	"<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>"}, // CLEAN ALL TEMPORARY CSS FILES ON 'DEPLOY MODE'
+		},		
+
+
 	});
 
 
@@ -234,6 +298,8 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.loadNpmTasks("grunt-responsive-images");
 	grunt.loadNpmTasks("grunt-contrib-sass");
+	grunt.loadNpmTasks("grunt-postcss");
+	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 
@@ -247,16 +313,24 @@ module.exports = function (grunt) {
 		"watch"
 	]);
 
-	grunt.registerTask("deploy",[
-		"clean:target",
-		"copy:pureCSS",			 			// TRANSFER ALL CSS FILES. SOON, THEY'LL BE PROCESSED BY A 'POSTCSS' TASK'
-		"sass:deploy_" + outputStructure,	// SETS THE BEHAVIOR OF ASSETS OUTPUT (DEPLOYED AS MULTIPLE FILES OR AS A SINGLE FILE)
-		// "sass:deploy",
-	//   "copy",
-	//   "responsive_images",
-	//   "watch"
-	]);
+	var deployTask = [];
+	
+		deployTask.push(
+			"clean:target",				// CLEAN ALL CONTENTS OF YOUR 'DEPLOY' FOLDER. WHICH NAME THIS 'DEPLOY' HAS IS DEFINED INSIDE A 'dir' OBJECT THAT'S INSIDE THE  initConfig({})
+			"copy:pureCSS_deploy",		// TRANSFER ALL CSS FILES. SOON, THEY'LL BE PROCESSED BY A 'POSTCSS' TASK'
+			"sass:deploy"		    
+		);
+		// IF YOU DESIRE TO GENERATE A UNIQUE CSS FILE, A 'CONCAT' TASK IS GONNA BE ADDED TO THE DEPLOY PROCESS. IT'S GONNA GENERATE A FILE LIKE "app.css", or "main.css" ETC...
+		if(assets_mode === "single_file") {
+			deployTask.push("concat:css_single_file");
+			deployTask.push("postcss:deploy");
+			deployTask.push("clean:temp_styles");
+		}
 
-	// grunt.registerTask("default", "dev");
+
+		
+	grunt.registerTask("deploy", deployTask); //SET A DEPLOY TASK
+
+	grunt.registerTask("default", "dev");
 
 };

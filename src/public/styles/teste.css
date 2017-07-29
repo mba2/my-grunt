@@ -1,1 +1,4 @@
-weaw
+*{
+    transform:rotate(90deg);
+   display:flex;
+}

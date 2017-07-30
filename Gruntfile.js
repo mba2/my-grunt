@@ -77,7 +77,6 @@ module.exports = function (grunt) {
 					cwd: "<%= dir.source %>",
 					src: ["<%= dir.public %>/**/*.css"],
 					dest: "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>",
-					ext: ".css"
 				}]
 			},
 			pureCSS_deploy: {
@@ -163,22 +162,39 @@ module.exports = function (grunt) {
 
 		//POST PROCESS
 		postcss : {
-			options : {
-				// map : true,
-				processors : [
-					require('autoprefixer')({browsers: 'last 30 versions'}), // ADD VENDOR PREFIX FOR SOME CSS PROPS
-					require('cssnano')(), 									 // MINIFY THE SINGLE FILE 
-				]
-			},
+			// options : {
+			// 	// map : true,
+			// 	processors : [
+			// 		require('autoprefixer')({browsers: 'last 30 versions'}), // ADD VENDOR PREFIX FOR SOME CSS PROPS
+			// 		require('cssnano')(), 									 // MINIFY THE SINGLE FILE 
+			// 	]
+			// },
 
 			dev: {
-				files : [{
-					src	: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>/app.css',
-					dest: 	'<%= dir.dev %>',
-				}]
+				options : {
+					map : true,
+					processors : [
+						require('autoprefixer')({browsers: 'last 30 versions'}), // ADD VENDOR PREFIX FOR SOME CSS PROPS
+					]
+				},
+				// files : [{
+				// 	src	: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/*.css',
+				// 	// dest: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/',
+				// }]
+				// files : [{
+					src	: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/*.css',
+					// dest: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/',
+				// }]
 			},
 
 			deploy: {
+				options : {
+					// map : true,
+					processors : [
+						require('autoprefixer')({browsers: 'last 30 versions'}), // ADD VENDOR PREFIX FOR SOME CSS PROPS
+						require('cssnano')(), 									 // MINIFY THE SINGLE FILE 
+					]
+				},
 				src	: 	'<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>/app.css',
 				dest: 	'<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/app.min.css',
 			}
@@ -224,11 +240,14 @@ module.exports = function (grunt) {
 			},
 			
 			pureCSS: {
-			  files: ["<%= dir.source %>/public/**/*.css"],
-			  tasks: ["copy:pureCSS_dev"],
-			  options: {
-			    event: ["added", "changed"]
-			  }
+				files: ["<%= dir.source %>/public/**/*.css"],
+				tasks: [
+					'copy:pureCSS_dev',
+					'postcss:dev'
+			],
+				options: {
+				event: ["added", "changed"]
+				}
 			},
 
 			js : {
@@ -264,7 +283,8 @@ module.exports = function (grunt) {
 				tasks 	: [
 					"clean:styles",
 					"sass:dev",
-					"copy:pureCSS_dev"
+					"copy:pureCSS_dev",
+					"postcss:dev"
 				],
 				options : {event : ["deleted"]}
 			},
@@ -286,7 +306,7 @@ module.exports = function (grunt) {
 			target 				: { "src" : "<%= dir.currTask %>/" },
 			backEnd 			: { "src" : "<%= dir.dev %>/*(<%= dir.resources %>|<%= dir.tests %>)"},	
 			public_PHP_HTML 	: { "src" : "<%= dir.dev %>/<%= dir.public %>/*.{php,html}"},
-			styles 				: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/**/*.css"},	
+			styles 				: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/**/*.{css,map}"},	
 			js 					: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.js %>/**/*.js"},			
 			temp_styles			: { "src" :	"<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>"}, // CLEAN ALL TEMPORARY CSS FILES ON 'DEPLOY MODE'
 		},		
@@ -312,7 +332,7 @@ module.exports = function (grunt) {
 		"copy:pureCSS_dev",
 		// "responsive_images",
 		"sass:dev",
-		// "postcss:dev",
+		"postcss:dev",
 		// "uglify",
 		"watch"
 	]);

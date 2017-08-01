@@ -31,7 +31,8 @@ module.exports = function (grunt) {
 					"expand": true,
 					"cwd": "<%= dir.source %>",
 					"src": ["?(resources||tests)/**/*", 
-							"public/*.{html,php}"	
+							"public/*.{html,php}",
+							"public/api/**/*"
 						   ],
 					"dest": "<%= dir.dev %>"
 				}]

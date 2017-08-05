@@ -1,7 +1,5 @@
 *{
     transform:rotate(90deg);
-    display:flex;
-    align-items: sdsa;
-    content: "s";
-    color: gold;
+   display:flex;
+   content: "pure CSS";
 }

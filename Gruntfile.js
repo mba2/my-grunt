@@ -71,11 +71,7 @@ module.exports = function (grunt) {
 			},
 
 			// THIS TARGET TRANSFERS PURE CSS IN 'DEV' MODE
-<<<<<<< HEAD
-			pureCSS_dev: {
-=======
 			pureCSS: {
->>>>>>> sass-deploy-mode
 				files: [{
 					expand: true,
 					flatten: true,
@@ -84,26 +80,16 @@ module.exports = function (grunt) {
 					dest: "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>",
 				}]
 			},
-<<<<<<< HEAD
-=======
 			// THIS TARGET TRANSFERS PURE CSS IN 'DEPLOY' MODE
->>>>>>> sass-deploy-mode
 			pureCSS_deploy: {
 				files: [{
 					expand: true,
 					flatten: true,
 					cwd: "<%= dir.source %>",
 					src: ["<%= dir.public %>/**/*.css"],
-<<<<<<< HEAD
-					dest: "<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>/",
-				}]
-			},
-			// THIS TARGET TRANSFERS PURE CSS IN 'DEV' MODE
-=======
 					dest: "<%= dir.deploy %>/<%= dir.public %>/<%= dir.temp_styles %>/",
 				}]
 			},
->>>>>>> sass-deploy-mode
 		},
 		
 		//RESPONSIVE IMAGES TASK
@@ -149,21 +135,13 @@ module.exports = function (grunt) {
 			
 			deploy: {
 				options : {
-<<<<<<< HEAD
-					// style 		: "compressed",
-=======
->>>>>>> sass-deploy-mode
 					sourcemap	: "none",
 				},
 				files : [{
 					expand 	: true,
 					cwd    	: "<%= dir.source %>/<%= dir.public %>/<%= dir.styles %>",
 					src	 	: "*.scss",
-<<<<<<< HEAD
-					dest	: "<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>",
-=======
 					dest	: "<%= dir.deploy %>/<%= dir.public %>/<%= dir.temp_styles %>",
->>>>>>> sass-deploy-mode
 					ext 	: ".css"
 				}]
 			}
@@ -177,55 +155,13 @@ module.exports = function (grunt) {
 				sepator : ";",
 			},
 			css_single_file : {
-<<<<<<< HEAD
-				src : "<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles%>/<%= dir.temp_styles %>/**/*.css",
-				dest: "<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles%>/<%= dir.temp_styles %>/app.css",
-=======
 				src : "<%= dir.deploy %>/<%= dir.public %>/<%= dir.temp_styles %>/**/*.css",
 				dest: "<%= dir.deploy %>/<%= dir.public %>/<%= dir.temp_styles %>/app.css",
->>>>>>> sass-deploy-mode
 			}
 		},
 
 		//POST PROCESS
 		postcss : {
-<<<<<<< HEAD
-			// options : {
-			// 	// map : true,
-			// 	processors : [
-			// 		require('autoprefixer')({browsers: 'last 30 versions'}), // ADD VENDOR PREFIX FOR SOME CSS PROPS
-			// 		require('cssnano')(), 									 // MINIFY THE SINGLE FILE 
-			// 	]
-			// },
-
-			dev: {
-				options : {
-					map : true,
-					processors : [
-						require('autoprefixer')({browsers: 'last 30 versions'}), // ADD VENDOR PREFIX FOR SOME CSS PROPS
-					]
-				},
-				// files : [{
-				// 	src	: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/*.css',
-				// 	// dest: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/',
-				// }]
-				// files : [{
-					src	: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/*.css',
-					// dest: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/',
-				// }]
-			},
-
-			deploy: {
-				options : {
-					// map : true,
-					processors : [
-						require('autoprefixer')({browsers: 'last 30 versions'}), // ADD VENDOR PREFIX FOR SOME CSS PROPS
-						require('cssnano')(), 									 // MINIFY THE SINGLE FILE 
-					]
-				},
-				src	: 	'<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>/app.css',
-				dest: 	'<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/app.min.css',
-=======
 			options : {
 				// map : true,
 				processors : [
@@ -255,7 +191,6 @@ module.exports = function (grunt) {
 					dest	: "<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>",
 					ext		: ".min.css"
 				}]
->>>>>>> sass-deploy-mode
 			}
 		},
 
@@ -365,15 +300,9 @@ module.exports = function (grunt) {
 			target 				: { "src" : "<%= dir.currTask %>/" },
 			backEnd 			: { "src" : "<%= dir.dev %>/*(<%= dir.resources %>|<%= dir.tests %>)"},	
 			public_PHP_HTML 	: { "src" : "<%= dir.dev %>/<%= dir.public %>/*.{php,html}"},
-<<<<<<< HEAD
-			styles 				: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/**/*.{css,map}"},	
-			js 					: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.js %>/**/*.js"},			
-			temp_styles			: { "src" :	"<%= dir.deploy %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>"}, // CLEAN ALL TEMPORARY CSS FILES ON 'DEPLOY MODE'
-=======
 			sass 				: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/**/*.css"},	
 			js 					: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.js %>/**/*.js"},			
 			temp_styles			: { "src" :	"<%= dir.deploy %>/<%= dir.public %>/<%= dir.temp_styles %>"}, // CLEAN ALL TEMPORARY CSS FILES ON 'DEPLOY MODE'
->>>>>>> sass-deploy-mode
 		},		
 
 
@@ -407,26 +336,6 @@ module.exports = function (grunt) {
 		"watch"
 	]);
 
-<<<<<<< HEAD
-	var deployTask = [];
-	
-		deployTask.push(
-			"clean:target",				// CLEAN ALL CONTENTS OF YOUR 'DEPLOY' FOLDER. WHICH NAME THIS 'DEPLOY' HAS IS DEFINED INSIDE A 'dir' OBJECT THAT'S INSIDE THE  initConfig({})
-			"copy:pureCSS_deploy",		// TRANSFER ALL CSS FILES. SOON, THEY'LL BE PROCESSED BY A 'POSTCSS' TASK'
-			"sass:deploy"		    
-		);
-		// IF YOU DESIRE TO GENERATE A UNIQUE CSS FILE, A 'CONCAT' TASK IS GONNA BE ADDED TO THE DEPLOY PROCESS. IT'S GONNA GENERATE A FILE LIKE "app.css", or "main.css" ETC...
-		if(assets_mode === "single_file") {
-			deployTask.push("concat:css_single_file");
-			deployTask.push("postcss:deploy");
-			deployTask.push("clean:temp_styles");
-		}
-
-
-		
-	grunt.registerTask("deploy", deployTask); //SET A DEPLOY TASK
-=======
->>>>>>> sass-deploy-mode
 
 	/*
 	** DEPLOY TASK SETUP

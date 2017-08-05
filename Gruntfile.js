@@ -171,8 +171,7 @@ module.exports = function (grunt) {
 
 			dev: {
 				files : [{
-					src	: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>/app.css',
-					dest: 	'<%= dir.dev %>',
+					src	: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/**/*.css',
 				}]
 			},
 

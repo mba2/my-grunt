@@ -23,7 +23,6 @@ module.exports = function (grunt) {
 			assets_mode	: grunt.option("assets_mode") || "multiple_files"
 		},
 
-
 		//COPY PROCESS
 		copy: {
 			//THIS TARGET AIMS TO ALL PROJECT'S ASSETS
@@ -80,7 +79,6 @@ module.exports = function (grunt) {
 					dest: "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>",
 				}]
 			},
-
 			// THIS TARGET TRANSFERS PURE CSS IN 'DEPLOY' MODE
 			pureCSS_deploy: {
 				files: [{
@@ -337,26 +335,6 @@ module.exports = function (grunt) {
 		"watch"
 	]);
 
-<<<<<<< HEAD
-	var deployTask = [];
-	
-		deployTask.push(
-			"clean:target",				// CLEAN ALL CONTENTS OF YOUR 'DEPLOY' FOLDER. WHICH NAME THIS 'DEPLOY' HAS IS DEFINED INSIDE A 'dir' OBJECT THAT'S INSIDE THE  initConfig({})
-			"copy:pureCSS_deploy",		// TRANSFER ALL CSS FILES. SOON, THEY'LL BE PROCESSED BY A 'POSTCSS' TASK'
-			"sass:deploy"		    
-		);
-		// IF YOU DESIRE TO GENERATE A UNIQUE CSS FILE, A 'CONCAT' TASK IS GONNA BE ADDED TO THE DEPLOY PROCESS. IT'S GONNA GENERATE A FILE LIKE "app.css", or "main.css" ETC...
-		if(assets_mode === "single_file") {
-			deployTask.push("concat:css_single_file");
-			deployTask.push("postcss:deploy");
-			deployTask.push("clean:temp_styles");
-		}
-
-
-		
-	grunt.registerTask("deploy", deployTask); //SET A DEPLOY TASK
-=======
->>>>>>> sass-deploy-mode
 
 	/*
 	** DEPLOY TASK SETUP

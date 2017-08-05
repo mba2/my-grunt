@@ -23,7 +23,6 @@ module.exports = function (grunt) {
 			assets_mode	: grunt.option("assets_mode") || "multiple_files"
 		},
 
-
 		//COPY PROCESS
 		copy: {
 			//THIS TARGET AIMS TO ALL PROJECT'S ASSETS
@@ -71,7 +70,7 @@ module.exports = function (grunt) {
 			},
 
 			// THIS TARGET TRANSFERS PURE CSS IN 'DEV' MODE
-			pureCSS: {
+			pureCSS_dev: {
 				files: [{
 					expand: true,
 					flatten: true,

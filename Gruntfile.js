@@ -162,19 +162,29 @@ module.exports = function (grunt) {
 
 		//POST PROCESS
 		postcss : {
-			options : {
-				// map : true,
-				processors : [
-					require('autoprefixer')({browsers: 'last 30 versions'}), // ADD VENDOR PREFIX FOR SOME CSS PROPS
-					require('cssnano')(), 									 // MINIFY THE SINGLE FILE 
-				]
-			},
+			// options : {
+			// 	// map : true,
+			// 	processors : [
+			// 		require('autoprefixer')({browsers: 'last 30 versions'}), // ADD VENDOR PREFIX FOR SOME CSS PROPS
+			// 		require('cssnano')(), 									 // MINIFY THE SINGLE FILE 
+			// 	]
+			// },
 
 			dev: {
-				files : [{
-					src	: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/<%= dir.temp_styles %>/app.css',
-					dest: 	'<%= dir.dev %>',
-				}]
+				options : {
+					map : true,
+					processors : [
+						require('autoprefixer')({browsers: 'last 30 versions'}), // ADD VENDOR PREFIX FOR SOME CSS PROPS
+					]
+				},
+				// files : [{
+				// 	src	: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/*.css',
+				// 	// dest: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/',
+				// }]
+				// files : [{
+					src	: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/*.css',
+					// dest: 	'<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/',
+				// }]
 			},
 
 			deploy_single_file: {
@@ -300,7 +310,7 @@ module.exports = function (grunt) {
 			target 				: { "src" : "<%= dir.currTask %>/" },
 			backEnd 			: { "src" : "<%= dir.dev %>/*(<%= dir.resources %>|<%= dir.tests %>)"},	
 			public_PHP_HTML 	: { "src" : "<%= dir.dev %>/<%= dir.public %>/*.{php,html}"},
-			sass 				: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/**/*.css"},	
+			styles 				: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.styles %>/**/*.{css,map}"},	
 			js 					: { "src" : "<%= dir.dev %>/<%= dir.public %>/<%= dir.js %>/**/*.js"},			
 			temp_styles			: { "src" :	"<%= dir.deploy %>/<%= dir.public %>/<%= dir.temp_styles %>"}, // CLEAN ALL TEMPORARY CSS FILES ON 'DEPLOY MODE'
 		},		

@@ -195,9 +195,10 @@ module.exports = function (grunt) {
 		//JS PROCESS
 		uglify : {
 			dev : {
-				// options : {
-
-				// },
+				options : {
+					beautify: true,
+					mangle: false,
+				},
 				files : [{
 					expand 	: true,
 					cwd	   	: "<%= dir.source %>/<%= dir.public %>/<%= dir.js %>",
@@ -244,7 +245,7 @@ module.exports = function (grunt) {
 
 			js : {
 				files 	: ["<%= dir.source %>/<%= dir.public %>/**/*.js"],
-				tasks 	: ["uglify:dev"],
+				tasks 	: ["newer:uglify:dev"],
 				options	: {
 					event : ['added','changed']
 				}
@@ -316,6 +317,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-watch");
+	grunt.loadNpmTasks("grunt-newer");
 
 
 
@@ -330,7 +332,7 @@ module.exports = function (grunt) {
 		// "responsive_images",
 		"sass:dev",
 		"postcss:dev",
-		// "uglify",
+		"uglify",
 		"watch"
 	]);
 

@@ -5,6 +5,7 @@ module.exports = function (grunt) {
 	var assets_mode = (grunt.option("assets_mode")) ? grunt.option("assets_mode") : "multiple_files";
 	
 	grunt.initConfig({
+		pkg : grunt.file.readJSON('package.json'),
 		// FOLDERS PATHS, STORED IN VARIABLES
 		dir: {
 			source		: "src",
@@ -194,16 +195,46 @@ module.exports = function (grunt) {
 
 		//JS PROCESS
 		uglify : {
+			options : {
+				compress : true,
+				beautify: false,
+				drop_console: true,
+				report : "min",
+				sourcemap: true,
+				mangle: {
+					toplevel : true,	
+				},
+				banner : 	'/* <%= pkg.name %> --- <%= pkg.version %>' +
+							'\n -- <%= grunt.template.today("dd/mm/yyyy") %> */'
+			},
 			dev : {
 				options : {
+					compress : false,
 					beautify: true,
+					drop_console: false,
+					sourcemap: false,
 					mangle: false,
+					banner : '',
 				},
 				files : [{
 					expand 	: true,
 					cwd	   	: "<%= dir.source %>/<%= dir.public %>/<%= dir.js %>",
 					src	   	: "**/*.js",
 					dest	: "<%= dir.dev %>/<%= dir.public %>/<%= dir.js %>",
+				}]
+			},
+			
+			deploy_single_file : {
+				files : {
+					"<%= dir.deploy %>/<%= dir.public %>/<%= dir.js %>/app.js" : ["<%= dir.source %>/<%= dir.public %>/<%= dir.js %>/**/*.js"]
+				}
+			},
+			deploy_multiple_files : {
+				files : [{
+					expand 	: true,
+					cwd	   	: "<%= dir.source %>/<%= dir.public %>/<%= dir.js %>",
+					src	   	: "**/*.js",
+					dest	: "<%= dir.deploy %>/<%= dir.public %>/<%= dir.js %>",
 				}]
 			}
 		},
@@ -332,7 +363,7 @@ module.exports = function (grunt) {
 		// "responsive_images",
 		"sass:dev",
 		"postcss:dev",
-		"uglify",
+		"uglify:dev",
 		"watch"
 	]);
 
@@ -352,10 +383,9 @@ module.exports = function (grunt) {
 		
 		deployTask.push(
 			"postcss:deploy_"+ assets_mode,
-			"clean:temp_styles"
+			"clean:temp_styles",
+			"uglify:deploy_" + assets_mode
 		);
-
-
 		
 	grunt.registerTask("deploy", deployTask); //REGISTER A DEPLOY TASK
 	grunt.registerTask("default", "dev"); 	  //REGISTER A DEV TASK

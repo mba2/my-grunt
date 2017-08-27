@@ -3,6 +3,24 @@
 span { content: "stylees1"};
 
 div {
-    justify-content: "center";
-    color: green;
+    // justify-content: "center";
+    // color: green;
+    display: block;
+    &:after {
+        content: "";
+        display: inline-block;
+    }
+}
+
+
+.css {
+    @include sprite($css3_logo);
+}
+.js {
+    
+    // @include sprite($js_logo);
+}
+.html {
+    @include sprite($html5_logo);
+
 }

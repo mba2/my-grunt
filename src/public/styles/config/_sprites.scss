@@ -10,16 +10,16 @@
 // At the bottom of this section, we provide information about the spritesheet itself
 // $spritesheet: width height image $spritesheet-sprites;
 $css3-logo-name: 'css3_logo';
-$css3-logo-x: 512px;
-$css3-logo-y: 195px;
-$css3-logo-offset-x: -512px;
-$css3-logo-offset-y: -195px;
+$css3-logo-x: 522px;
+$css3-logo-y: 0px;
+$css3-logo-offset-x: -522px;
+$css3-logo-offset-y: 0px;
 $css3-logo-width: 142px;
 $css3-logo-height: 200px;
-$css3-logo-total-width: 707px;
+$css3-logo-total-width: 664px;
 $css3-logo-total-height: 512px;
-$css3-logo-image: './img';
-$css3-logo: (512px, 195px, -512px, -195px, 142px, 200px, 707px, 512px, './img', 'css3_logo', );
+$css3-logo-image: '../img/app.png';
+$css3-logo: (522px, 0px, -522px, 0px, 142px, 200px, 664px, 512px, '../img/app.png', 'css3_logo', );
 $html5-logo-name: 'html5_logo';
 $html5-logo-x: 0px;
 $html5-logo-y: 0px;
@@ -27,26 +27,15 @@ $html5-logo-offset-x: 0px;
 $html5-logo-offset-y: 0px;
 $html5-logo-width: 512px;
 $html5-logo-height: 512px;
-$html5-logo-total-width: 707px;
+$html5-logo-total-width: 664px;
 $html5-logo-total-height: 512px;
-$html5-logo-image: './img';
-$html5-logo: (0px, 0px, 0px, 0px, 512px, 512px, 707px, 512px, './img', 'html5_logo', );
-$js-logo-name: 'js_logo';
-$js-logo-x: 512px;
-$js-logo-y: 0px;
-$js-logo-offset-x: -512px;
-$js-logo-offset-y: 0px;
-$js-logo-width: 195px;
-$js-logo-height: 195px;
-$js-logo-total-width: 707px;
-$js-logo-total-height: 512px;
-$js-logo-image: './img';
-$js-logo: (512px, 0px, -512px, 0px, 195px, 195px, 707px, 512px, './img', 'js_logo', );
-$spritesheet-width: 707px;
+$html5-logo-image: '../img/app.png';
+$html5-logo: (0px, 0px, 0px, 0px, 512px, 512px, 664px, 512px, '../img/app.png', 'html5_logo', );
+$spritesheet-width: 664px;
 $spritesheet-height: 512px;
-$spritesheet-image: './img';
-$spritesheet-sprites: ($css3-logo, $html5-logo, $js-logo, );
-$spritesheet: (707px, 512px, './img', $spritesheet-sprites, );
+$spritesheet-image: '../img/app.png';
+$spritesheet-sprites: ($css3-logo, $html5-logo, );
+$spritesheet: (664px, 512px, '../img/app.png', $spritesheet-sprites, );
 
 // The provided mixins are intended to be used with the array-like variables
 //

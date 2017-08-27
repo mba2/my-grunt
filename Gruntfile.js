@@ -70,8 +70,8 @@ module.exports = function (grunt) {
 				}]
 			},
 
-			// THIS TARGET TRANSFERS PURE CSS IN 'DEV' MODE
-			pureCSS_dev: {
+			// THIS TARGET TRANSFERS PURE CSS FILES
+			pureCSS: {
 				files: [{
 					expand: true,
 					flatten: true,
@@ -95,17 +95,31 @@ module.exports = function (grunt) {
 		// SPRITE PROCESS
 		sprite : {
 			all : {
-				src: "<%= dir.source %>/<%= dir.public %>/<%= dir.images %>/sprite/**/*.png",
-				dest:"<%= dir.source %>/<%= dir.public %>/<%= dir.images %>/app.png",
-				destCss:"<%= dir.source %>//<%= dir.public %>/<%= dir.styles %>/config/_sprites.scss",
-				imgPath: "./<%= dir.images %>",
+				src : "<%= dir.source %>/<%= dir.public %>/<%= dir.images %>/sprite/**/*.png",
+				dest :"<%= dir.source %>/<%= dir.public %>/<%= dir.images %>/app.png",
+				destCss :"<%= dir.source %>/<%= dir.public %>/<%= dir.styles %>/config/_sprites.scss",
+				imgPath : "../<%= dir.images %>/app.png",
+				padding : 10, 
 			}
 		},
 
 		// IMAGES MINIFICATION PROCESS
 		imagemin : {
+			options: {
+				optimizationLevel: 3,
+			},
 			all : {
-
+				files : [{
+					expand : true, 
+					cwd : "<%= dir.source %>/<%= dir.public %>/<%= dir.images %>",
+					src : ["**/*.{png,jpeg,jpg,gif}","!sprite/*"],
+					dest : "<%= dir.currTask %>/<%= dir.public %>/<%= dir.images %>",
+				}]
+			},
+			sprite : {
+				files : {
+					"<%= dir.dev %>/<%= dir.public %>/<%= dir.images %>/app.png" : "<%= dir.source %>/<%= dir.public %>/<%= dir.images %>/app.png"
+				}
 			}
 		},
 		
@@ -259,87 +273,94 @@ module.exports = function (grunt) {
 		// WATCH PROCESS
 		watch: {
 			// WATCH - ADITION AND MOFIICATION PROCESS
-			backEnd: {
-			  files		: ["<%= dir.source %>/?(<%= dir.resources %>|<%= dir.tests %>)/**/*"],
-			  tasks		: ["copy:backEnd"],
-			  options	: {event: ["added","changed"]}
-			},
+			// backEnd: {
+			//   files		: ["<%= dir.source %>/?(<%= dir.resources %>|<%= dir.tests %>)/**/*"],
+			//   tasks		: ["copy:backEnd"],
+			//   options	: {event: ["added","changed"]}
+			// },
 
-			public_PHP_HTML: {
-				files	: ["<%= dir.source %>/<%= dir.public %>/*.{php,html}"],
-				tasks	: ["copy:public_PHP_HTML"],
-				options	: { event: ["added", "changed"] }
-			},
+			// public_PHP_HTML: {
+			// 	files	: ["<%= dir.source %>/<%= dir.public %>/*.{php,html}"],
+			// 	tasks	: ["copy:public_PHP_HTML"],
+			// 	options	: { event: ["added", "changed"] }
+			// },
 
-			sass : {
-				files 	: ["<%= dir.source %>/<%= dir.public %>/**/*.scss"],
-				tasks 	: [
-					"sass:dev",
-					"postcss:dev"
-				],
-				options	: {event: ["added","changed"]}
-			},
+			// sass : {
+			// 	files 	: ["<%= dir.source %>/<%= dir.public %>/**/*.scss"],
+			// 	tasks 	: [
+			// 		"sass:dev",
+			// 		"postcss:dev"
+			// 	],
+			// 	options	: {event: ["added","changed"]}
+			// },
 			
-			pureCSS: {
-				files: ["<%= dir.source %>/public/**/*.css"],
-				tasks: [
-					'copy:pureCSS_dev',
-					'postcss:dev'
-			],
-				options: {
-				event: ["added", "changed"]
-				}
+			// pureCSS: {
+			// 	files: ["<%= dir.source %>/public/**/*.css"],
+			// 	tasks: [
+			// 		'copy:pureCSS_dev',
+			// 		'postcss:dev'
+			// ],
+			// 	options: {
+			// 	event: ["added", "changed"]
+			// 	}
+			// },
+
+			// js : {
+			// 	files 	: ["<%= dir.source %>/<%= dir.public %>/**/*.js"],
+			// 	tasks 	: ["newer:uglify:dev"],
+			// 	options	: {
+			// 		event : ['added','changed']
+			// 	}
+			// },
+			"sprite" : {
+				files : ["<%= dir.source %>/<%= dir.public %>/<%= dir.images %>/sprite/*.png"],
+				// options : {"events" : ["all"]},
+				tasks : ["sprite",
+						 "imagemin:sprite",
+						 "sass:dev"]
 			},
 
-			js : {
-				files 	: ["<%= dir.source %>/<%= dir.public %>/**/*.js"],
-				tasks 	: ["newer:uglify:dev"],
-				options	: {
-					event : ['added','changed']
-				}
-			},
 
+			// // WATCH - DELETE PROCESS
+			// deleted_backEnd : {
+			// 	files : ["<%= dir.source %>/?(<%= dir.resources %>|<%= dir.tests %>)/**/*"],
+			// 	tasks : [
+			// 		"clean:backEnd",
+			// 		"copy:backEnd"
+			// 	],
+			// 	options : { event : "deleted"}
+			// },
 
-			// WATCH - DELETE PROCESS
-			deleted_backEnd : {
-				files : ["<%= dir.source %>/?(<%= dir.resources %>|<%= dir.tests %>)/**/*"],
-				tasks : [
-					"clean:backEnd",
-					"copy:backEnd"
-				],
-				options : { event : "deleted"}
-			},
+			// deleted_public_PHP_and_HTML: {
+			// 	files: ["<%= dir.source %>/<%= dir.public %>/*.{html,php}"],
+			// 	tasks: [
+			// 		"clean:public_PHP_HTML",
+			// 		"copy:public_PHP_HTML"
+			// 	],
+			// 	options: {event : ["deleted"]}
+			// },
 
-			deleted_public_PHP_and_HTML: {
-				files: ["<%= dir.source %>/<%= dir.public %>/*.{html,php}"],
-				tasks: [
-					"clean:public_PHP_HTML",
-					"copy:public_PHP_HTML"
-				],
-				options: {event : ["deleted"]}
-			},
+			// deleted_sass_and_css : {
+			// 	files 	: ["<%= dir.source %>/<%= dir.public %>/<%= dir.styles %>/*.{scss,css}"],
+			// 	tasks 	: [
+			// 		"clean:styles",
+			// 		"sass:dev",
+			// 		"copy:pureCSS_dev",
+			// 		"postcss:dev"
+			// 	],
+			// 	options : {event : ["deleted"]}
+			// },
 
-			deleted_sass_and_css : {
-				files 	: ["<%= dir.source %>/<%= dir.public %>/<%= dir.styles %>/*.{scss,css}"],
-				tasks 	: [
-					"clean:styles",
-					"sass:dev",
-					"copy:pureCSS_dev",
-					"postcss:dev"
-				],
-				options : {event : ["deleted"]}
-			},
-
-			deleted_javascript : {
-				files 	: ["<%= dir.source %>/<%= dir.public %>/**/*.js"],
-				tasks 	: [
-					"clean:js",
-					"uglify:dev",
-				],
-				options	: {
-					event : ['deleted']
-				}
-			},
+			// deleted_javascript : {
+			// 	files 	: ["<%= dir.source %>/<%= dir.public %>/**/*.js"],
+			// 	tasks 	: [
+			// 		"clean:js",
+			// 		"uglify:dev",
+			// 	],
+			// 	options	: {
+			// 		event : ['deleted']
+			// 	}
+			// },
 		},
 
 		//CLEAN PROCESS
@@ -377,15 +398,16 @@ module.exports = function (grunt) {
 
 	grunt.registerTask("dev", [
 		"clean:target",
-		"imagemin",
-		"sprite"
-		// "copy:dev",
-		// "copy:pureCSS_dev",
+		"sprite",
 		// "responsive_images",
-		// "sass:dev",
+		"imagemin:all",
+		"copy:pureCSS",
+		"sass:dev",
+		"copy:public_PHP_HTML",
+		// "copy:dev",
 		// "postcss:dev",
 		// "uglify:dev",
-		// "watch"
+		"watch"
 	]);
 
 

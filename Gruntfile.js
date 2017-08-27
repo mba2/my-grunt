@@ -91,6 +91,23 @@ module.exports = function (grunt) {
 				}]
 			},
 		},
+
+		// SPRITE PROCESS
+		sprite : {
+			all : {
+				src: "<%= dir.source %>/<%= dir.public %>/<%= dir.images %>/sprite/**/*.png",
+				dest:"<%= dir.source %>/<%= dir.public %>/<%= dir.images %>/app.png",
+				destCss:"<%= dir.source %>//<%= dir.public %>/<%= dir.styles %>/config/_sprites.scss",
+				imgPath: "./<%= dir.images %>",
+			}
+		},
+
+		// IMAGES MINIFICATION PROCESS
+		imagemin : {
+			all : {
+
+			}
+		},
 		
 		//RESPONSIVE IMAGES TASK
 			// myTask: {
@@ -342,6 +359,8 @@ module.exports = function (grunt) {
 	// LOAD TASKS
 	grunt.loadNpmTasks("grunt-contrib-clean");
 	grunt.loadNpmTasks("grunt-contrib-copy");
+	grunt.loadNpmTasks("grunt-spritesmith");
+	grunt.loadNpmTasks("grunt-contrib-imagemin");
 	grunt.loadNpmTasks("grunt-responsive-images");
 	grunt.loadNpmTasks("grunt-contrib-sass");
 	grunt.loadNpmTasks("grunt-postcss");
@@ -358,13 +377,15 @@ module.exports = function (grunt) {
 
 	grunt.registerTask("dev", [
 		"clean:target",
-		"copy:dev",
-		"copy:pureCSS_dev",
+		"imagemin",
+		"sprite"
+		// "copy:dev",
+		// "copy:pureCSS_dev",
 		// "responsive_images",
-		"sass:dev",
-		"postcss:dev",
-		"uglify:dev",
-		"watch"
+		// "sass:dev",
+		// "postcss:dev",
+		// "uglify:dev",
+		// "watch"
 	]);
 
 

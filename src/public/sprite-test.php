@@ -1,5 +1,5 @@
 <head>
-    <link rel="stylesheet" href="./styles/styles1.css">
+    <link rel="stylesheet" href="../../dev/public/styles/styles1.css">
 </head>
 
 

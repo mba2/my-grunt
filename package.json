@@ -1,6 +1,6 @@
 {
-  "name": "portfolio-v1",
-  "version": "1.0.0",
+  "name": "my-grunt",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-spritesmith": "^6.4.0"
   }
 }
